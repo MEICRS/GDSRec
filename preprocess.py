@@ -83,7 +83,7 @@ valid_set = pos_list[num_test:2 * num_test]
 train_set = pos_list[2 * num_test:]
 print('Train samples: {}, Valid samples: {}, Test samples: {}'.format(len(train_set), len(valid_set), len(test_set)))
 
-with open(workdir + args.dataset + '/dataset.pkl', 'wb') as f:  # 数据按格式保存，便于以后直接调用
+with open(workdir + args.dataset + '/dataset_3.pkl', 'wb') as f:  # 数据按格式保存，便于以后直接调用
 	pickle.dump(train_set, f, pickle.HIGHEST_PROTOCOL)
 	pickle.dump(valid_set, f, pickle.HIGHEST_PROTOCOL)
 	pickle.dump(test_set, f, pickle.HIGHEST_PROTOCOL)
@@ -196,7 +196,7 @@ for u in tqdm(range(user_count + 1)):
 			inter_list = list(set(user_info.keys()).intersection(set(u_info.keys())))
 			inter_count = len(inter_list)
 			for item in inter_list:
-				if abs(u_info[item]-user_info[item]) > 1:
+				if abs(u_info[item]-user_info[item]) > 3:
 					inter_count = inter_count - 1
 			u_u_similar.append((user, inter_count+1))
 		if u_u_similar == []:
@@ -214,7 +214,7 @@ for u in tqdm(range(user_count + 1)):
 			u_users_items_divlist.append(uu_items_div)
 
 
-with open(workdir + args.dataset + '/list.pkl', 'wb') as f:
+with open(workdir + args.dataset +'/list_3.pkl', 'wb') as f:
 	pickle.dump(u_items_divlist, f, pickle.HIGHEST_PROTOCOL)  # 评分为差值
 	pickle.dump(u_items_list, f, pickle.HIGHEST_PROTOCOL)  # 用户评论过的物品集合，正常的评分
 	pickle.dump(u_avg_list, f, pickle.HIGHEST_PROTOCOL)

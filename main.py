@@ -29,7 +29,9 @@ from model import DRGR
 from dataloader import GRDataset
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset_path', default='datasets/Epinions/', help='dataset directory path: datasets/Ciao/Epinions')
+parser.add_argument('--dataset_path', default='datasets/Ciao/', help='dataset directory path: datasets/Ciao/Epinions')
+parser.add_argument('--data', default='Ciao', help='corresponding to datapath')
+parser.add_argument('--sigma', type=str, default='0', help='social strength definition')
 parser.add_argument('--batch_size', type=int, default=128, help='input batch size')
 parser.add_argument('--embed_dim', type=int, default=256, help='the dimension of embedding')
 parser.add_argument('--epoch', type=int, default=100, help='the number of epochs to train for')
@@ -47,12 +49,12 @@ print(device)
 
 def main():
     print('Loading data...')
-    with open(args.dataset_path + 'dataset.pkl', 'rb') as f:
+    with open(args.dataset_path + 'dataset_'+ args.sigma +'.pkl', 'rb') as f:
         train_set = pickle.load(f)
         valid_set = pickle.load(f)
         test_set = pickle.load(f)
 
-    with open(args.dataset_path + 'list.pkl', 'rb') as f:
+    with open(args.dataset_path + 'list_'+ args.sigma +'.pkl', 'rb') as f:
         u_items_divlist = pickle.load(f)
         u_items_list = pickle.load(f)
         u_avg_list = pickle.load(f)
@@ -76,7 +78,7 @@ def main():
 
     if args.test:
         print('Load checkpoint and testing...')
-        ckpt = torch.load('best_checkpoint.pth.tar')
+        ckpt = torch.load(args.data+'/best_checkpoint_'+args.sigma+'.pth.tar')
         model.load_state_dict(ckpt['state_dict'])
         mae, rmse = validate(test_loader, model)
         print("Test: MAE: {:.4f}, RMSE: {:.4f}".format(mae, rmse))
@@ -115,14 +117,14 @@ def main():
             'optimizer': optimizer.state_dict()
         }
 
-        torch.save(ckpt_dict, 'latest_checkpoint.pth.tar')
+        torch.save(ckpt_dict, args.data+'/latest_checkpoint_'+args.sigma+'.pth.tar')
 
         if epoch == 0:
             best_sum = rmse+mae
-            torch.save(ckpt_dict, 'best_checkpoint.pth.tar')
+            torch.save(ckpt_dict, args.data+'/best_checkpoint_'+args.sigma+'.pth.tar')
         elif rmse+mae < best_sum:
             best_sum = rmse+mae
-            torch.save(ckpt_dict, 'best_checkpoint.pth.tar')
+            torch.save(ckpt_dict, args.data+'/best_checkpoint_'+args.sigma+'.pth.tar')
 
         print('Epoch {} validation: MAE: {:.4f}, RMSE: {:.4f}, Best Sum: {:.4f}'.format(epoch, mae, rmse, best_sum))
 

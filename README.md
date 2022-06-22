@@ -22,3 +22,5 @@ python main.py
 python test.py
 ```
 
+For the ranking task, please see https://github.com/MEICRS/GDSRec_rank
+

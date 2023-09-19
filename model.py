@@ -196,7 +196,7 @@ class _SocialModel(nn.Module):
 
 
 class GDSRec(nn.Module):
-    '''GraphRec model proposed in the paper Graph neural network for social recommendation 
+    '''
 
     Args:
         number_users: the number of users in the dataset.
